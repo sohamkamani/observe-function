@@ -23,12 +23,73 @@ it('should have a before and after register function', function(){
 
 it('should register', function(){
   var beforeFunction = chai.spy();
-  var afterFunction = chai.spy();  observedFunction.before(beforeFunction);
+  var afterFunction = chai.spy();
+  observedFunction.before(beforeFunction);
   observedFunction.after(afterFunction);
   observedFunction('d','e');
   observedSpy.should.have.been.called.with('d', 'e');
   beforeFunction.should.have.been.called.with('d', 'e');
   afterFunction.should.have.been.called.with('d', 'e');
+});
+
+it('should remove before listener register', function(){
+  var beforeFunction = chai.spy();
+  var afterFunction = chai.spy();
+  observedFunction.before(beforeFunction);
+  observedFunction.after(afterFunction);
+  observedFunction.remove.before(beforeFunction);
+  observedFunction('d','e');
+  observedSpy.should.have.been.called.with('d', 'e');
+  beforeFunction.should.not.have.been.called();
+  afterFunction.should.have.been.called.with('d', 'e');
+});
+
+it('should remove after listener register', function(){
+  var beforeFunction = chai.spy();
+  var afterFunction = chai.spy();
+  observedFunction.before(beforeFunction);
+  observedFunction.after(afterFunction);
+  observedFunction.remove.after(afterFunction);
+  observedFunction('d','e');
+  observedSpy.should.have.been.called.with('d', 'e');
+  afterFunction.should.not.have.been.called();
+  beforeFunction.should.have.been.called.with('d', 'e');
+});
+
+it('should reset after listener register', function(){
+  var beforeFunction = chai.spy();
+  var afterFunction = chai.spy();
+  observedFunction.before(beforeFunction);
+  observedFunction.after(afterFunction);
+  observedFunction.reset.after();
+  observedFunction('d','e');
+  observedSpy.should.have.been.called.with('d', 'e');
+  afterFunction.should.not.have.been.called();
+  beforeFunction.should.have.been.called.with('d', 'e');
+});
+
+it('should reset before listener register', function(){
+  var beforeFunction = chai.spy();
+  var afterFunction = chai.spy();
+  observedFunction.before(beforeFunction);
+  observedFunction.after(afterFunction);
+  observedFunction.reset.before();
+  observedFunction('d','e');
+  observedSpy.should.have.been.called.with('d', 'e');
+  beforeFunction.should.not.have.been.called();
+  afterFunction.should.have.been.called.with('d', 'e');
+});
+
+it('should reset all listeners', function(){
+  var beforeFunction = chai.spy();
+  var afterFunction = chai.spy();
+  observedFunction.before(beforeFunction);
+  observedFunction.after(afterFunction);
+  observedFunction.reset.all();
+  observedFunction('d','e');
+  observedSpy.should.have.been.called.with('d', 'e');
+  beforeFunction.should.not.have.been.called();
+  afterFunction.should.not.have.been.called();
 });
 
 it('should return the correct value', function(){
